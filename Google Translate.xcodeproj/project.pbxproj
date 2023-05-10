@@ -39,6 +39,7 @@
 				E57F0F3A2A0B74A700159941 /* Products */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 0;
 		};
 		E57F0F3A2A0B74A700159941 /* Products */ = {
 			isa = PBXGroup;
