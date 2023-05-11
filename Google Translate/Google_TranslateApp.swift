@@ -12,8 +12,7 @@ struct Google_TranslateApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-            
-            
+                .colorScheme(.light)
         }
     }
 }

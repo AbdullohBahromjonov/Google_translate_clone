@@ -10,21 +10,37 @@ import SwiftUI
 struct ContentView: View {
     @State var text = ""
     @State var showTraslation = false
+    @State var translate = false
     @FocusState var showKeyboard: Bool
+    @ObservedObject var viewModel = ViewModel()
+    
+    var languages = [
+        "ru": "Russian",
+        "en": "English"
+    ]
     
     var body: some View {
         ZStack(alignment: .top) {
             VStack {
                 HStack {
-                    Text("Russian")
+                    Text("\(languages[viewModel.languages[1]]!)")
                         .frame(width: (getSize().width-30)/2)
                     
-                    Image(systemName: "arrow.left.arrow.right")
-                        .frame(width: 25)
-                        .foregroundColor(.black.opacity(0.5))
-                        .offset(y: 2)
+                    Button(
+                        action: {
+                            withAnimation(.easeInOut(duration: 0.1)) {
+                                viewModel.languages.reverse()
+                            }
+                        },
+                        label: {
+                            Image(systemName: "arrow.left.arrow.right")
+                                .frame(width: 25)
+                                .foregroundColor(.black.opacity(0.5))
+                                .offset(y: 2)
+                        }
+                    )
                     
-                    Text("English")
+                    Text("\(languages[viewModel.languages[0]]!)")
                         .frame(width: (getSize().width-30)/2)
                 }
                 .frame(height: 50)
@@ -49,6 +65,9 @@ struct ContentView: View {
                         action: {
                             text = ""
                             showKeyboard = false
+                            translate = false
+                            viewModel.translation.data.translations[0].translatedText = ""
+                            
                             withAnimation(.easeInOut(duration: 0.1)) {
                                 showTraslation = false
                             }
@@ -70,7 +89,7 @@ struct ContentView: View {
                     HStack() {
                         ScrollView(.vertical, showsIndicators: true) {
                             HStack {
-                                Text(text)
+                                Text(translate ? viewModel.translation.data.translations[0].translatedText : text)
                                     .multilineTextAlignment(.leading)
                                     .padding()
                                     .padding(.top, -10)
@@ -84,6 +103,8 @@ struct ContentView: View {
                             action: {
                                 if !text.isEmpty {
                                     showKeyboard = false
+                                    translate = true
+                                    viewModel.postRequest(text: text)
                                 }
                             },
                             label: {
@@ -121,3 +142,4 @@ struct ContentView_Previews: PreviewProvider {
 func getSize() -> CGSize {
     return UIScreen.main.bounds.size
 }
+
