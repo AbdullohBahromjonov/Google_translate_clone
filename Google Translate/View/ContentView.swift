@@ -51,15 +51,21 @@ struct ContentView: View {
                     .overlay(.gray)
                 
                 HStack(alignment: .top) {
-                    TextField("Enter Text", text: $text, axis: .vertical)
+                    TextField("Enter Text", text: $text)
                         .onTapGesture {
                             withAnimation(.easeInOut(duration: 0.1)) {
                                 showTraslation = true
                             }
                         }
+                        .submitLabel(.done)
                         .frame(height: 100, alignment: .top)
                         .padding(.leading)
                         .focused($showKeyboard)
+                    
+                        .onSubmit {
+                            translate = true
+                            viewModel.postRequest(text: text)
+                        }
                     
                     Button(
                         action: {
